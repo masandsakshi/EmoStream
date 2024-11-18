@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emoji Stream</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            overflow: hidden; /* Hide scrollbars */
+            margin: 0;
+            padding: 0;
+            background-color: #000; /* Set background to black */
+        }
+        .emoji-container {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            pointer-events: none; /* Allow clicks through the container */
+        }
+        .emoji-item {
+            position: absolute;
+            bottom: -50px; /* Start below the viewport */
+            left: 50%;
+            font-size: 48px;
+            animation: floatUp 5s linear forwards;
+            opacity: 0;
+        }
+        @keyframes floatUp {
+            0% {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-50%) translateY(-110vh); /* Move up beyond the viewport */
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="emoji-container" class="emoji-container"></div>
+
+    <!-- Include socket.io -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.min.js" referrerpolicy="no-referrer"></script>
+
+    <script>
+        var socket = io();
+
+        socket.on('emoji_data', function(msg) {
+            var emojiType = msg.emoji_type;
+            var count = msg.final_count;
+
+            for (var i = 0; i < count; i++) {
+                createFloatingEmoji(emojiType);
+            }
+        });
+
+        function createFloatingEmoji(emoji) {
+            var emojiContainer = document.getElementById('emoji-container');
+            var emojiDiv = document.createElement('div');
+            emojiDiv.className = 'emoji-item';
+            emojiDiv.style.left = Math.random() * 100 + '%'; // Random horizontal position
+            emojiDiv.style.animationDuration = (3 + Math.random() * 2) + 's'; // Vary animation duration
+
+            emojiDiv.textContent = emoji;
+
+            emojiContainer.appendChild(emojiDiv);
+
+            // Remove the emoji after animation completes
+            emojiDiv.addEventListener('animationend', function() {
+                emojiContainer.removeChild(emojiDiv);
+            });
+        }
+    </script>
+</body>
+</html>
