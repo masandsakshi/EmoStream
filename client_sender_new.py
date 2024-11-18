@@ -3,6 +3,7 @@ import requests
 import random
 import time
 import uuid
+
 from datetime import datetime
 
 emojis = ['😀', '😂', '🥰', '😢', '😡']
