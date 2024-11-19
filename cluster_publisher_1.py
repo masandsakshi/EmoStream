@@ -1,9 +1,9 @@
-# main_publisher.py
+# cluster_publisher.py
 from kafka import KafkaConsumer, KafkaProducer
 import json
 
 consumer = KafkaConsumer(
-    'emoji_topic_aggregated',
+    'cluster_topic_1',
     bootstrap_servers=['localhost:9092'],
     value_deserializer=lambda x: json.loads(x.decode('utf-8'))
 )
@@ -15,7 +15,7 @@ producer = KafkaProducer(
 
 for message in consumer:
     data = message.value
-    # Forward data to multiple clusters
-    producer.send('cluster_topic_1', value=data)
-    producer.send('cluster_topic_2', value=data)
-    producer.send('cluster_topic_3', value=data)
+    # Forward data to multiple subscribers
+    producer.send('subscriber_topic_1', value=data)
+    producer.send('subscriber_topic_2', value=data)
+    producer.send('subscriber_topic_3', value=data)
