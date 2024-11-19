@@ -15,5 +15,7 @@ producer = KafkaProducer(
 
 for message in consumer:
     data = message.value
-    # Forward data to subscriber_topic
-    producer.send('subscriber_topic', value=data)
+    # Forward data to multiple subscribers
+    producer.send('subscriber_topic_1', value=data)
+    producer.send('subscriber_topic_2', value=data)
+    producer.send('subscriber_topic_3', value=data)
