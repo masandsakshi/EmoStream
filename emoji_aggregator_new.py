@@ -91,8 +91,15 @@ aggregated_df = json_df \
 
 aggregated_df = aggregated_df.withColumn(
     "final_count",
-    when(col("count") <= 1000, col("count").cast(IntegerType())).otherwise((col("count") / 1000).cast(IntegerType()))
+    when(col("count") < 100, 
+        col("count").cast(IntegerType())).otherwise((col("count") / 100).cast(IntegerType()))
 )
+
+# aggregated_df = aggregated_df.withColumn(
+#     "final_count",
+#     when(col("count") <= 100, 0)
+#     .otherwise((col("count") / 100).cast(IntegerType()))
+# )
 
 # Prepare data to send to Kafka
 output_df = aggregated_df.selectExpr(
